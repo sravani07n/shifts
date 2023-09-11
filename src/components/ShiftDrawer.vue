@@ -90,7 +90,7 @@ const dateString = ref('')
 
 watch(() => store.shiftIdToEdit,
 () => {
-  const shiftDetails = store.getShiftById
+  const shiftDetails = JSON.parse(JSON.stringify(store.getShiftById))
   if (shiftDetails) {
     shiftTitle.value = shiftDetails.title
     shiftDescription.value = shiftDetails.description
