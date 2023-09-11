@@ -1,0 +1,24 @@
+.v-slider-thumb__surface {
+  background-color: #F26680;
+}
+
+
+.v-slider-track__fill {
+  background-color: #C4C4C4;
+}
+
+.v-slider-track {
+  border: 1px solid #C4C4C4
+}
+
+.v-slider-track__background {
+  background-color: transparent;
+}
+
+.v-slider-track__tick {
+  width: 0
+}
+
+.v-input__details {
+  display: none!important;
+}
