@@ -1,12 +1,7 @@
 <template>
   <v-card>
     <v-layout>
-      <v-navigation-drawer
-        v-model="drawer"
-        location="right"
-        temporary
-        class="container"
-      >
+      <v-navigation-drawer v-model="drawer" location="right" temporary class="container">
         <div class="flex navigation-header">
           <TitleHeader msg="Create/Edit" />
           <div @click="onCloseDrawer" class="close-icon">
@@ -16,30 +11,16 @@
         <label class="title"> Title </label>
         <input placeholder="Title" class="inputClass" v-model="shiftTitle" maxlength="100" />
         <label class="title"> Description </label>
-        <textarea
-          id="w3review"
-          name="w3review"
-          rows="4"
-          cols="50"
-          class="inputClass"
-          maxlength="500"
-          v-model="shiftDescription"
-        ></textarea>
+        <textarea id="w3review" name="w3review" rows="4" cols="50" class="inputClass" maxlength="500"
+          v-model="shiftDescription"></textarea>
         <label class="title"> Dates </label>
         <div class="wrapper">
-          <input
-            type="date"
-            v-model="selectedDate"
-            @change="addDate"
-            class="inputClass"
-          />
+          <div class="flex">
+            <input type="text" class="datesInputText" :value="dateString" />
+            <input type="date" v-model="selectedDate" @change="addDate" class="dateInput" />
+          </div>
           <div class="date-chips">
-            <div
-              class="date-chip"
-              v-for="date in dates"
-              :key="date"
-              style="margin-bottom: 10px"
-            >
+            <div class="date-chip" v-for="date in dates" :key="date" style="margin-bottom: 10px">
               <div class="flex">
                 <p style="font-size: 14px; font-weight: bold">
                   {{ date.date }}
@@ -52,15 +33,18 @@
                 <div class="flex">
                   <div>
                     <div class="shit-input-label">Start time</div>
-                    <input placeholder="hh:mm" class="shift-input without_ampm" type="time" :step="3600"  v-model="date.startTime" />
+                    <input placeholder="hh:mm" class="shift-input without_ampm" type="time" :step="3600"
+                      v-model="date.startTime" />
                   </div>
                   <div>
                     <div class="shit-input-label">End time</div>
-                    <input placeholder="hh:mm" class="shift-input without_ampm" type="time" :step="3600" v-model="date.endTime" />
+                    <input placeholder="hh:mm" class="shift-input without_ampm" type="time" :step="3600"
+                      v-model="date.endTime" />
                   </div>
                   <div>
                     <p class="shit-input-label">Price</p>
-                    <div class="shift-input-container"><input placeholder="" class="shift-input" v-model="date.price"/>€</div>
+                    <div class="shift-input-container"><input placeholder="" class="shift-input" v-model="date.price" />€
+                    </div>
                   </div>
                 </div>
                 <label class="type-label">Type</label>
@@ -74,22 +58,10 @@
           </div>
         </div>
         <div class="flex actions-wrapper">
-          <v-btn
-            class="action-btn"
-            color="#404040"
-            size="small"
-            variant="outlined"
-            @click="onDeleteClick"
-          >
-            {{ shiftIdToEdit ? 'DELETE' : 'CANCEL' }}
+          <v-btn class="action-btn" color="#404040" size="small" variant="outlined" @click="onDeleteClick">
+            {{ String(shiftIdToEdit) ? 'DELETE' : 'CANCEL' }}
           </v-btn>
-          <v-btn
-            class="action-btn"
-            color="#404040"
-            size="small"
-            variant="flat"
-            @click="onSaveClick"
-          >
+          <v-btn class="action-btn" color="#404040" size="small" variant="flat" @click="onSaveClick">
             SAVE
           </v-btn>
         </div>
@@ -114,6 +86,7 @@ const newShift = ref([])
 const shiftTitle = ref('')
 const shiftDescription = ref('')
 const error = ref(false)
+const dateString = ref('')
 
 watch(() => store.shiftIdToEdit,
 () => {
@@ -122,6 +95,7 @@ watch(() => store.shiftIdToEdit,
     shiftTitle.value = shiftDetails.title
     shiftDescription.value = shiftDetails.description
     dates.value = shiftDetails.shiftDates
+    dateString.value = dates.value.map(date => date.date)
   }
 })
 
@@ -129,6 +103,7 @@ const addDate = () => {
   const shiftDates = dates.value.map(date => date.date)
   if (shiftDates.includes(selectedDate.value)) return alert('Cannot select same date!')
   dates.value.push({date: selectedDate.value, startTime: '', endTime: '', price: 0, type: 'Consultation'});
+  dateString.value = dates.value.map(date => date.date)
 }
 const onSaveClick = () => {
   error.value = false
@@ -186,7 +161,6 @@ const onCloseDrawer = () => {
   drawer.value = false
   shiftIdToEdit.value = ''
 }
-
 </script>
 <style scoped>
 @import "../../node_modules/@syncfusion/ej2-base/styles/material.css";
@@ -220,6 +194,26 @@ const onCloseDrawer = () => {
   font-size: 12px;
   border-radius: 3px;
   margin-bottom: 10px;
+}
+
+.dateInput {
+  width: 28px;
+  border: 1px solid lightgray;
+  outline: none;
+  padding: 5px;
+  font-size: 12px;
+  border-radius: 3px;
+  margin-bottom: 10px;
+}
+
+.datesInputText {
+  width: 90%;
+  border: 1px solid lightgray;
+  outline: none;
+  font-size: 12px;
+  padding: 5px;
+  border-radius: 3px;
+  height: 32px;
 }
 
 .title {
@@ -270,6 +264,7 @@ const onCloseDrawer = () => {
   color: black;
   padding-right: 10px;
 }
+
 .shift-input {
   background-color: white;
   width: 80px;
